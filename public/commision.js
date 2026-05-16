@@ -19,6 +19,8 @@ window.addEventListener("resize", resizeCanvas);
 
   canvas.addEventListener("mousedown", (e) => {
   drawing = true;
+   ctx.fillStyle = "white"; 
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
