@@ -5,6 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // canvas setup
   const canvas = document.getElementById("drawing-canvas");
   const ctx = canvas.getContext("2d");
+  function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
   let drawing = false;
 
   canvas.addEventListener("mousedown", (e) => {
