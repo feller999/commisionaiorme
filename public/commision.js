@@ -1,14 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const socket = io("https://commisionaiorme.onrender.com");
   let currentRoom = null;
 
   // canvas setup
   const canvas = document.getElementById("drawing-canvas");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
   const ctx = canvas.getContext("2d");
   let drawing = false;
-
-
 
   canvas.addEventListener("mousedown", () => drawing = true);
   canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
@@ -35,13 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       const isAI = btn.classList.contains("ai-button");
-      document.getElementById("ui-ai").style.display        = isAI ? "flex"   : "none";
-      document.getElementById("display-area").style.display = isAI ? "none"   : "block";
-      document.getElementById("message-app").style.display  = isAI ? "none"   : "block";
+      document.getElementById("ui-ai").style.display        = isAI ? "flex"  : "none";
+      document.getElementById("display-area").style.display = isAI ? "none"  : "block";
+      document.getElementById("message-app").style.display  = isAI ? "none"  : "block";
       document.querySelector(".toggle").style.display       = "flex";
+    });
   });
-});
-   
 
   // enviar prompt (usuário)
   function handleSend() {
@@ -60,17 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
     clearCanvas();
   }
 
-  // expor funções para o HTML
   window.handleSend = handleSend;
   window.handleRespond = handleRespond;
   window.clearCanvas = clearCanvas;
 
-  // enter para enviar
   document.getElementById("message-input").addEventListener("keypress", (e) => {
     if (e.key === "Enter") handleSend();
   });
 
-  // socket events
   socket.on("matched", (data) => {
     currentRoom = data.room;
     console.log("Matched! Room:", currentRoom);
@@ -82,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("prompt", (data) => {
     const display = document.getElementById("display-area");
+    document.getElementById("prompt-recebido").textContent = data;
     if (data.startsWith("data:image")) {
       const img = document.createElement("img");
       img.src = data;
